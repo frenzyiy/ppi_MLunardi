@@ -1,9 +1,62 @@
 package ppiBuxa;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+
 import java.util.Scanner;
 
 public class gerenciarJoias {
 
+        // ===============================
+        // SALVAR EM TXT
+        // ===============================
+
+    static void salvarEstoqueTXT(
+        String[] nome_produto,
+        String[] nome_fornecedor,
+        int[] cod_produto,
+        int[] peso,
+        int[] quantidade,
+        double[] valor_bruto,
+        double[] custo_total,
+        double[] valor_final,
+        int[] banhoEscolhido,
+        String[] codigosBanho ) { 
+            
+            try {
+            BufferedWriter escrever = new BufferedWriter(new FileWriter("estoque.txt"));
+
+        escrever.write("FORNECEDOR;CODIGO;BANHO;PRODUTO;PESO;QTD;BRUTO;CUSTO;FINAL");
+        escrever.newLine();
+
+        for (int i = 0; i < nome_produto.length; i++) {
+            if (nome_produto[i] != null && quantidade[i] != -1) {
+
+                escrever.write(
+                        nome_fornecedor[i] + ";" +
+                        cod_produto[i] + ";" +
+                        codigosBanho[banhoEscolhido[i]] + ";" +
+                        nome_produto[i] + ";" +
+                        peso[i] + ";" +
+                        quantidade[i] + ";" +
+                        valor_bruto[i] + ";" +
+                        custo_total[i] + ";" +
+                        valor_final[i]
+                );
+                escrever.newLine();
+            }
+        }
+
+        escrever.close();
+
+        System.out.println("Estoque salvo com sucesso!");
+
+
+    } catch (IOException e) {
+        System.out.println("Erro ao salvar o estoque no TXT.");
+    }
+}
     public static void main(String[] args) throws InterruptedException {
 
         Scanner estoque = new Scanner(System.in);
@@ -316,6 +369,12 @@ public class gerenciarJoias {
             // 0 — SAIR
             // ===============================
             if (opcao == 0) {
+                                
+            salvarEstoqueTXT(
+                nome_produto, nome_fornecedor, cod_produto, peso,
+                quantidade, valor_bruto, custo_total, valor_final,
+                banhoEscolhido, codigosBanho );
+                
                 System.out.println("Sistema encerrado.");
                 verificacao = false;
                 estoque.close();
