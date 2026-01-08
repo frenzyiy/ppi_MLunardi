@@ -1,6 +1,7 @@
 package ppiBuxa;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
@@ -11,52 +12,108 @@ public class gerenciarJoias {
         // ===============================
         // SALVAR EM TXT
         // ===============================
+static void pegarEstoqueTXT(
+            String[] nome_produto, 
+            String[] nome_fornecedor, 
+            int[] cod_produto,
+            int[] peso, 
+            int[] quantidade, 
+            double[] valor_bruto, 
+            double[] custo_total,
+            double[] valor_final, 
+            int[] banhoEscolhido, 
+            String[] codigosBanho) {
 
+        File arquivo = new File("estoque.txt");
+
+
+        try {
+            Scanner leitor = new Scanner(arquivo);
+
+            if (leitor.hasNextLine()) {
+                leitor.nextLine();
+            }
+
+            int i = 0;
+            while (leitor.hasNextLine()) {
+                String linha = leitor.nextLine();
+                String[] dados = linha.split(";");
+
+                if (dados.length >= 9) {
+                    nome_fornecedor[i] = dados[0];
+                    cod_produto[i] = Integer.parseInt(dados[1]);
+
+                    String codigoBanhoLido = dados[2];
+                    banhoEscolhido[i] = 0; 
+                    for (int j = 0; j < codigosBanho.length; j++) {
+                        if (codigosBanho[j].equalsIgnoreCase(codigoBanhoLido)) {
+                            banhoEscolhido[i] = j;
+                            break;
+                        }
+                    }
+
+                    nome_produto[i] = dados[3];
+                    peso[i] = Integer.parseInt(dados[4]);
+                    quantidade[i] = Integer.parseInt(dados[5]);
+                    valor_bruto[i] = Double.parseDouble(dados[6]);
+                    custo_total[i] = Double.parseDouble(dados[7]);
+                    valor_final[i] = Double.parseDouble(dados[8]);
+
+                    i++;
+                }
+            }
+            leitor.close();
+
+        } catch (Exception e) {
+            System.out.println("Erro.");
+        }
+    }
+    //==================
+    // 2. SALVAR DADOS
+    // =================
     static void salvarEstoqueTXT(
-        String[] nome_produto,
-        String[] nome_fornecedor,
-        int[] cod_produto,
-        int[] peso,
-        int[] quantidade,
-        double[] valor_bruto,
-        double[] custo_total,
-        double[] valor_final,
-        int[] banhoEscolhido,
-        String[] codigosBanho ) { 
-            
-            try {
+            String[] nome_produto,
+            String[] nome_fornecedor,
+            int[] cod_produto,
+            int[] peso,
+            int[] quantidade,
+            double[] valor_bruto,
+            double[] custo_total,
+            double[] valor_final,
+            int[] banhoEscolhido,
+            String[] codigosBanho) {
+
+        try {
             BufferedWriter escrever = new BufferedWriter(new FileWriter("estoque.txt"));
 
-        escrever.write("FORNECEDOR;CODIGO;BANHO;PRODUTO;PESO;QTD;BRUTO;CUSTO;FINAL");
-        escrever.newLine();
+            escrever.write("FORNECEDOR;CODIGO;BANHO;PRODUTO;PESO;QTD;BRUTO;CUSTO;FINAL");
+            escrever.newLine();
 
-        for (int i = 0; i < nome_produto.length; i++) {
-            if (nome_produto[i] != null && quantidade[i] != -1) {
+            for (int i = 0; i < nome_produto.length; i++) {
+                if (nome_produto[i] != null && quantidade[i] != -1) {
+                    String linha = String.format("%s;%d;%s;%s;%d;%d;%s;%s;%s",
+                            nome_fornecedor[i],
+                            cod_produto[i],
+                            codigosBanho[banhoEscolhido[i]],
+                            nome_produto[i],
+                            peso[i],
+                            quantidade[i],
+                            String.valueOf(valor_bruto[i]),
+                            String.valueOf(custo_total[i]),
+                            String.valueOf(valor_final[i])
+                    );
 
-                escrever.write(
-                        nome_fornecedor[i] + ";" +
-                        cod_produto[i] + ";" +
-                        codigosBanho[banhoEscolhido[i]] + ";" +
-                        nome_produto[i] + ";" +
-                        peso[i] + ";" +
-                        quantidade[i] + ";" +
-                        valor_bruto[i] + ";" +
-                        custo_total[i] + ";" +
-                        valor_final[i]
-                );
-                escrever.newLine();
+                    escrever.write(linha);
+                    escrever.newLine();
+                }
             }
+            escrever.close();
+            System.out.println("Estoque salvo e atualizado.");
+
+        } catch (IOException e) {
+            System.out.println("Erro.");
         }
-
-        escrever.close();
-
-        System.out.println("Estoque salvo com sucesso!");
-
-
-    } catch (IOException e) {
-        System.out.println("Erro ao salvar o estoque no TXT.");
     }
-}
     public static void main(String[] args) throws InterruptedException {
 
         Scanner estoque = new Scanner(System.in);
@@ -87,6 +144,11 @@ public class gerenciarJoias {
         double[] valorVenda = new double[10000];
         String[] nomeCliente = new String[10000];
         String[] contatoCliente = new String[10000];
+
+        pegarEstoqueTXT(
+            nome_produto, nome_fornecedor, cod_produto, peso, 
+            quantidade, valor_bruto, custo_total, valor_final, 
+            banhoEscolhido, codigosBanho);
 
         boolean verificacao = true;
 
