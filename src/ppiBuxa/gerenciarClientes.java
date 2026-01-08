@@ -34,6 +34,7 @@ class gerenciarClientes {
                 verificacao = false;
             }
         }
+        // não fechando System.in scanner para evitar fechar entrada usada por outras mains
     }
 }
 
@@ -256,7 +257,7 @@ public class JOALHERIAMODELO {
                 System.out.println("Digite o nome do produto:");
                 String nome = estoque.nextLine();
 
-                System.out.println("Digite o peso da joia:");
+                System.out.println("Digite o peso da joia em gramas");
                 int pesoJoia = Integer.parseInt(estoque.nextLine());
 
                 System.out.println("Digite a quantidade:");
@@ -465,3 +466,4 @@ public class JOALHERIAMODELO {
         }
     }
 }
+
