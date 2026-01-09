@@ -13,15 +13,15 @@ public class gerenciarJoias {
         // SALVAR EM TXT
         // ===============================
 static void pegarEstoqueTXT(
-            String[] nome_produto, 
-            String[] nome_fornecedor, 
+            String[] nome_produto,
+            String[] nome_fornecedor,
             int[] cod_produto,
-            int[] peso, 
-            int[] quantidade, 
-            double[] valor_bruto, 
+            int[] peso,
+            int[] quantidade,
+            double[] valor_bruto,
             double[] custo_total,
-            double[] valor_final, 
-            int[] banhoEscolhido, 
+            double[] valor_final,
+            int[] banhoEscolhido,
             String[] codigosBanho) {
 
         File arquivo = new File("estoque.txt");
@@ -44,7 +44,7 @@ static void pegarEstoqueTXT(
                     cod_produto[i] = Integer.parseInt(dados[1]);
 
                     String codigoBanhoLido = dados[2];
-                    banhoEscolhido[i] = 0; 
+                    banhoEscolhido[i] = 0;
                     for (int j = 0; j < codigosBanho.length; j++) {
                         if (codigosBanho[j].equalsIgnoreCase(codigoBanhoLido)) {
                             banhoEscolhido[i] = j;
@@ -130,7 +130,12 @@ static void pegarEstoqueTXT(
         double[] custo_total = new double[10000]; // banhoAtual x peso + bruto
         double[] valor_final = new double[10000]; // custo_total + % lucro
         int[] banhoEscolhido = new int[10000];
-
+       
+        String[] nome_cliente = new String[10000];
+        String[] contato_cliente = new String[10000];
+        int[] parcelas_pagamento = new int[10000];
+        String[] email_cliente = new String[10000];
+        String[] empresa_cliente = new String[10000];
         // ===============================
         // BANHOS FIXOS
         // ===============================
@@ -142,12 +147,11 @@ static void pegarEstoqueTXT(
         // ===============================
         int[] codProdutoVenda = new int[10000];
         double[] valorVenda = new double[10000];
-        String[] nomeCliente = new String[10000];
-        String[] contatoCliente = new String[10000];
-
+ 
+       
         pegarEstoqueTXT(
-            nome_produto, nome_fornecedor, cod_produto, peso, 
-            quantidade, valor_bruto, custo_total, valor_final, 
+            nome_produto, nome_fornecedor, cod_produto, peso,
+            quantidade, valor_bruto, custo_total, valor_final,
             banhoEscolhido, codigosBanho);
 
         boolean verificacao = true;
@@ -161,8 +165,14 @@ static void pegarEstoqueTXT(
             System.out.println("3- Excluir produto");
             System.out.println("4- Ver estoque");
             System.out.println("5- Buscar produto");
-            System.out.println("6- Atualizar BANHO");
+            System.out.println("6- Atualizar banho");
             System.out.println("7- Registrar venda");
+            System.out.println("8- Adicionar cliente");
+            System.out.println("9- Editar cliente");
+            System.out.println("10- Excluir cliente");
+            System.out.println("11- Ver cliente");
+            System.out.println("12- Buscar cliente");
+           
             System.out.println("0- Sair");
             System.out.println("====================================");
             System.out.println("Escolha a opção desejada:");
@@ -284,14 +294,14 @@ static void pegarEstoqueTXT(
                 if (resp.equalsIgnoreCase("s")) {
                     for (int i = 0; i <= cod_produto.length - 1; i++) {
                         if (cod_produto[i] == buscar) {
-                            cod_produto[i] = 0;
+                            cod_produto[i] = -1;
                             nome_produto[i] = null;
                             nome_fornecedor[i] = null;
-                            peso[i] = 0;
-                            valor_bruto[i] = 0;
-                            custo_total[i] = 0;
-                            valor_final[i] = 0;
-                            banhoEscolhido[i] = 0;
+                            peso[i] = -1;
+                            valor_bruto[i] = -1;
+                            custo_total[i] = -1;
+                            valor_final[i] = -1;
+                            banhoEscolhido[i] = -1;
                             quantidade[i] = -1;
                             System.out.println("Produto excluído!");
                             break;
@@ -307,15 +317,15 @@ static void pegarEstoqueTXT(
 
                 System.out.println(
                         "------------------------------------------------------------------------------------------------------------------");
-                System.out.printf("| %-15s | %-12s | %-6s | %-20s | %-5s | %-10s | %-12s | %-12s |\n",
-                        "FORNECEDOR", "COD PRODUTO", "BANHO", "PRODUTO", "PESO", "BRUTO", "CUSTO TOTAL", "VALOR FINAL");
+                System.out.printf("| %-15s | %-12s | %-6s | %-20s | %-5s | %-5s | %-10s | %-12s | %-12s |\n",
+                        "FORNECEDOR", "COD PRODUTO", "BANHO", "PRODUTO", "QTD", "PESO", "BRUTO", "CUSTO TOTAL", "VALOR FINAL");
                 System.out.println(
                         "------------------------------------------------------------------------------------------------------------------");
 
                 for (int i = 0; i < nome_produto.length; i++) {
                     if (nome_produto[i] != null && quantidade[i] != -1) {
-                        System.out.printf("| %-15s | %-12d | %-6s | %-20s | %-5d | %-10.2f | %-12.2f | %-12.2f |\n",
-                                nome_fornecedor[i], cod_produto[i], codigosBanho[banhoEscolhido[i]], nome_produto[i],
+                    	System.out.printf("| %-15s | %-12d | %-6s | %-20s | %-5d | %-5d | %-10.2f | %-12.2f | %-12.2f |\n",
+                                nome_fornecedor[i], cod_produto[i], codigosBanho[banhoEscolhido[i]], nome_produto[i],quantidade[i],
                                 peso[i], valor_bruto[i], custo_total[i], valor_final[i]);
                     }
                 }
@@ -390,6 +400,11 @@ static void pegarEstoqueTXT(
                 if (indiceProduto == -1) {
                     System.out.println("Produto não encontrado!");
                     continue;
+                    
+                }
+                if (quantidade[indiceProduto] <= 0) {
+                    System.out.println("Produto sem estoque disponível!");
+                    continue;
                 }
 
                 // Escolher banho para venda
@@ -405,9 +420,35 @@ static void pegarEstoqueTXT(
                 }
 
                 System.out.println("Nome do cliente:");
-                String cliente = estoque.nextLine();
-                System.out.println("Contato do cliente:");
-                String contato = estoque.nextLine();
+                String nomeCliente = estoque.nextLine();
+
+                System.out.println("Empresa do cliente:");
+                String empresaCliente = estoque.nextLine();
+
+                int indiceCliente = -1;
+
+                
+                for (int i = 0; i < nome_cliente.length; i++) {
+                    if (nome_cliente[i] != null &&
+                        nome_cliente[i].equalsIgnoreCase(nomeCliente) &&
+                        empresa_cliente[i].equalsIgnoreCase(empresaCliente)) {
+
+                        indiceCliente = i;
+                        break;
+                    }
+                }
+
+                if (indiceCliente == -1) {
+                    System.out.println("Cliente não encontrado. Cadastre o cliente primeiro.");
+                    continue;
+                }
+
+
+                String contatoCliente = contato_cliente[indiceCliente];
+                String emailCliente = email_cliente[indiceCliente];
+                int parcelasCliente = parcelas_pagamento[indiceCliente];
+
+                
                 System.out.println("Porcentagem de lucro para esta venda:");
                 double lucroVenda = estoque.nextDouble();
                 estoque.nextLine();
@@ -419,24 +460,194 @@ static void pegarEstoqueTXT(
                     if (codProdutoVenda[i] == 0) {
                         codProdutoVenda[i] = codigoVenda;
                         valorVenda[i] = valorVendaFinal;
-                        nomeCliente[i] = cliente;
-                        contatoCliente[i] = contato;
+                        nome_cliente[i] = nomeCliente;
+                        contato_cliente[i] = contatoCliente;
+                        email_cliente[i] = emailCliente;
+                        parcelas_pagamento[i] = parcelasCliente;
+                        
+                        
+                        quantidade[indiceProduto] = quantidade[indiceProduto] - 1;
+                        
                         System.out.println("Venda registrada! Valor final: R$" + valorVendaFinal);
+                        break;
+                    }
+                }
+            }
+           
+           
+           
+           
+           
+            // ===============================
+            // 8 — ADICIONAR CLIENTE
+            // ===============================
+           
+            if (opcao == 8) {
+                int parcelasPagamento = 0;
+                
+                System.out.println("Digite o nome do cliente:");
+                String nomeCliente = estoque.nextLine();
+
+                System.out.println("Digite o contato do cliente:");
+                String  contatoCliente = estoque.nextLine();
+
+                System.out.println("Digite o email do cliente");
+                String emailCliente = estoque.nextLine();
+               
+                System.out.println("Digite empresa cliente");
+                String empresaCliente = estoque.nextLine();
+
+                System.out.println("O cliente vai pagar em parcelas? (sim/não)");
+                String pagarParcelado = estoque.nextLine();
+
+                if (pagarParcelado.equalsIgnoreCase("sim")) {
+                    System.out.println("Digite quantas parcelas:");
+                    parcelasPagamento = estoque.nextInt();
+                    estoque.nextLine();
+                } else {
+                    parcelasPagamento = 0;
+                }
+
+                for (int i = 0; i <= nome_cliente.length - 1; i++) {
+                    if (nome_cliente[i] == null) {
+                       
+                        nome_cliente[i] = nomeCliente;
+                        contato_cliente[i] = contatoCliente;
+                        parcelas_pagamento[i] = parcelasPagamento;
+                        empresa_cliente[i] = empresaCliente;
+                        email_cliente[i] = emailCliente;
+                        System.out.println("novo Cliente cadastrado com sucesso ");
                         break;
                     }
                 }
             }
 
             // ===============================
+            // 9 — EDITAR CLIENTE
+            // ===============================
+            if (opcao == 9) {
+
+            	System.out.println("Digite o nome do cliente para buscar:");
+                String buscarCliente = estoque.nextLine();
+
+                System.out.println("Digite o empresa do cliente para buscar:");
+                String buscarEmpresa = estoque.nextLine();
+
+                for (int i = 0; i <= nome_cliente.length - 1; i++) {
+
+                    if (nome_cliente[i].equals(buscarCliente) && empresa_cliente[i].equals(buscarEmpresa)) {
+
+                        System.out.println("Novo cliente:");
+                        nome_cliente[i] = estoque.nextLine();
+
+                        System.out.println("Novo contato:");
+                        contato_cliente[i] = estoque.nextLine();
+
+                        System.out.println("Digite o email do cliente");
+                        String emailCliente = estoque.nextLine();
+                       
+                        System.out.println("Digite empresa cliente");
+                        String empresaCliente = estoque.nextLine();
+                       
+                        System.out.println("Novo pagamento:");
+                        parcelas_pagamento[i] = estoque.nextInt();
+                       
+               
+                        System.out.println("Produto atualizado!");
+                        break;
+                    }
+                }
+            }
+
+            // ===============================
+            // 10 — EXCLUIR CLIENTE
+            // ===============================
+            if (opcao == 10) {
+
+            	System.out.println("Digite o nome do cliente que deseja excluir:");
+                String nomeClienteExcluir = estoque.nextLine();
+
+                System.out.println("Digite a empresa do cliente que deseja excluir:");
+                String empresaClienteExcluir = estoque.nextLine();
+                
+                System.out.println("Certeza que deseja excluir? (s/n)");
+                String resp = estoque.nextLine();
+
+                if (resp.equalsIgnoreCase("s")) {
+                    for (int i = 0; i <= nome_cliente.length - 1; i++) {
+                    	if (nome_cliente[i] != null &&
+                                nome_cliente[i].equalsIgnoreCase(nomeClienteExcluir) &&
+                                empresa_cliente[i] != null &&
+                                empresa_cliente[i].equalsIgnoreCase(empresaClienteExcluir)) {
+ 
+
+                            nome_cliente[i] = null;
+                            contato_cliente[i] = null;
+                            parcelas_pagamento[i] = -1;
+                            email_cliente[i] = null;
+                            empresa_cliente[i] = null;
+                            System.out.println("Produto excluído!");
+                            break;
+                        }
+                    }
+                }
+            }
+
+            // ===============================
+            // 11 — VER CLIENTES
+            // ===============================
+            if (opcao == 11) {
+
+                System.out.println(
+                        "------------------------------------------------------------------------------------------------------------------");
+                System.out.printf("| %-20s | %-18s | %-25s | %-20s | %-10s |\n",
+                        "NOME CLIENTE", "CONTATO", "EMAIL", "EMPRESA", "PARCELAS");
+                System.out.println(
+                        "------------------------------------------------------------------------------------------------------------------");
+
+                for (int i = 0; i < nome_cliente.length; i++) {
+                    if (nome_cliente[i] != null && empresa_cliente[i] != null) {
+                    	System.out.printf("| %-20s | %-18s | %-25s | %-20s | %-10s |\n",
+                    	nome_cliente[i],contato_cliente[i],email_cliente[i],empresa_cliente[i],parcelas_pagamento[i]);
+
+                    }
+                }
+                System.out.println(
+                        "------------------------------------------------------------------------------------------------------------------");
+                Thread.sleep(2000);
+            }
+
+            // ===============================
+            // 12 — BUSCAR CLIENTE
+            // ===============================
+            if (opcao == 12) {
+
+                System.out.println("Digite o nome do cliente para buscar:");
+                String buscarCliente = estoque.nextLine();
+
+                System.out.println("Digite o empresa do cliente para buscar:");
+                String buscarEmpresa = estoque.nextLine();
+                for (int i = 0; i <= nome_cliente.length - 1; i++) {
+                    if (nome_cliente[i].equals(buscarCliente) && empresa_cliente[i] != null && empresa_cliente[i].equals(buscarEmpresa)) {
+                        System.out.println("cliente encontrado:");
+                        System.out.printf("NOME CLIENTE: %s | CONTATO: %s | PARCELAS PAGAMENTO: %d | EMPRESA CLIENTE: %s | EMAIL: %s \n",
+                        nome_cliente[i], contato_cliente[i], parcelas_pagamento[i],empresa_cliente[i],email_cliente[i]);
+                        break;
+                    }
+                }
+            }
+
+           
+            // ===============================
             // 0 — SAIR
             // ===============================
             if (opcao == 0) {
-                                
+                               
             salvarEstoqueTXT(
                 nome_produto, nome_fornecedor, cod_produto, peso,
                 quantidade, valor_bruto, custo_total, valor_final,
                 banhoEscolhido, codigosBanho );
-                
+               
                 System.out.println("Sistema encerrado.");
                 verificacao = false;
                 estoque.close();
