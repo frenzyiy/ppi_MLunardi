@@ -1,6 +1,0 @@
-Nome do Usuário: João Silva
-Pontuação Máxima: 1500
---- Inventário ---
-- Espada Longa
-- Poção de Vida
-- Escudo de Madeira

@@ -24,20 +24,21 @@ static void pegarEstoqueTXT(
             int[] banhoEscolhido,
             String[] codigosBanho) {
 
-        File arquivo = new File("estoque.txt");
+        File arquivo = new File("estoque.txt"); // ja existe um arquivo chamado estoque txt, aponta
 
 
-        try {
-            Scanner leitor = new Scanner(arquivo);
+        try { // tentar, se nao der pula para o catch
+            Scanner leitor = new Scanner(arquivo); // cria um scanner para ler o arquivo feito
 
-            if (leitor.hasNextLine()) {
+            if (leitor.hasNextLine()) {  //tem linha?
+                // pula linha - cabeçalho
                 leitor.nextLine();
             }
 
-            int i = 0;
-            while (leitor.hasNextLine()) {
-                String linha = leitor.nextLine();
-                String[] dados = linha.split(";");
+            int i = 0; // indice do vetor
+            while (leitor.hasNextLine()) { // enquanto ainda existir linha no arquivo, continue lendo
+                String linha = leitor.nextLine(); // le uma linha inteira do txt
+                String[] dados = linha.split(";"); // quebra a linha toda vez que encontrar ;
 
                 if (dados.length >= 9) {
                     nome_fornecedor[i] = dados[0];
@@ -62,14 +63,13 @@ static void pegarEstoqueTXT(
                     i++;
                 }
             }
-            leitor.close();
 
         } catch (Exception e) {
             System.out.println("Erro.");
         }
     }
     //==================
-    // 2. SALVAR DADOS
+    // 2. SALVAR DADOS           apaga tudo escreve tudo de novo já com os dados atualizados
     // =================
     static void salvarEstoqueTXT(
             String[] nome_produto,
@@ -89,7 +89,7 @@ static void pegarEstoqueTXT(
             escrever.write("FORNECEDOR;CODIGO;BANHO;PRODUTO;PESO;QTD;BRUTO;CUSTO;FINAL");
             escrever.newLine();
 
-            for (int i = 0; i < nome_produto.length; i++) {
+            for (int i = 0; i < nome_produto.length; i++) { //percorre todo nomeproduto
                 if (nome_produto[i] != null && quantidade[i] != -1) {
                     String linha = String.format("%s;%d;%s;%s;%d;%d;%s;%s;%s",
                             nome_fornecedor[i],
@@ -114,6 +114,9 @@ static void pegarEstoqueTXT(
             System.out.println("Erro.");
         }
     }
+
+
+//====================================================================================
 
 
         // ===============================
@@ -194,7 +197,9 @@ static void pegarClienteTXT(
     }
 
 
-
+// ===============
+// MAIN
+// ===============
 
     public static void main(String[] args) throws InterruptedException {
 
