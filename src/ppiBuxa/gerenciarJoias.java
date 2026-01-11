@@ -10,7 +10,7 @@ import java.util.Scanner;
 public class gerenciarJoias {
 
         // ===============================
-        // SALVAR EM TXT
+        // MANTER NO TXT
         // ===============================
 static void pegarEstoqueTXT(
             String[] nome_produto,
@@ -114,6 +114,88 @@ static void pegarEstoqueTXT(
             System.out.println("Erro.");
         }
     }
+
+
+        // ===============================
+        // MANTER NO TXT clientes
+        // ===============================
+static void pegarClienteTXT(
+        String[] nome_cliente, 
+        String[] contato_cliente, 
+        String[] email_cliente, 
+        String[] empresa_cliente ) {
+
+        File arquivo = new File("clientes.txt");
+
+
+        try {
+            Scanner leitor = new Scanner(arquivo);
+
+            if (leitor.hasNextLine()) {
+                leitor.nextLine();
+            }
+
+            int i = 0;
+            while (leitor.hasNextLine()) {
+                String linha = leitor.nextLine();
+                String[] dados = linha.split(";");
+
+                if (dados.length >= 4) {
+                    nome_cliente[i] = dados[0];
+                    contato_cliente[i] = dados[1];
+                    email_cliente[i] = dados[2];
+                    empresa_cliente[i] = dados[3];
+                    i++;
+                
+                    }
+
+                }
+            
+            leitor.close();
+
+        } catch (Exception e) {
+            System.out.println("Erro.");
+        }
+    }
+    //==================
+    // 2. SALVAR DADOS clientes
+    // =================
+    static void salvarClienteTXT(
+        String[] nome_cliente, 
+        String[] contato_cliente, 
+        String[] email_cliente, 
+        String[] empresa_cliente ) {
+
+        try {
+            BufferedWriter escrever = new BufferedWriter(new FileWriter("clientes.txt"));
+
+            escrever.write("NOME  ;CONTATO  ;E-MAIL  ;EMPRESA");
+            escrever.newLine();
+
+            for (int i = 0; i < nome_cliente.length; i++) {
+                if (nome_cliente[i] != null) {
+                    String linha = String.format("%s;%s;%s;%s",
+                            nome_cliente[i],
+                            contato_cliente[i],
+                            email_cliente[i],
+                            empresa_cliente[i]
+                    );
+
+                    escrever.write(linha);
+                    escrever.newLine();
+                }
+            }
+            escrever.close();
+            System.out.println("Clientes salvos com sucesso!");
+
+        } catch (IOException e) {
+            System.out.println("Erro.");
+        }
+    }
+
+
+
+
     public static void main(String[] args) throws InterruptedException {
 
         Scanner estoque = new Scanner(System.in);
@@ -130,7 +212,7 @@ static void pegarEstoqueTXT(
         double[] custo_total = new double[10000]; // banhoAtual x peso + bruto
         double[] valor_final = new double[10000]; // custo_total + % lucro
         int[] banhoEscolhido = new int[10000];
-       
+    
         String[] nome_cliente = new String[10000];
         String[] contato_cliente = new String[10000];
         int[] parcelas_pagamento = new int[10000];
@@ -147,12 +229,14 @@ static void pegarEstoqueTXT(
         // ===============================
         int[] codProdutoVenda = new int[10000];
         double[] valorVenda = new double[10000];
- 
-       
+
+    
         pegarEstoqueTXT(
             nome_produto, nome_fornecedor, cod_produto, peso,
             quantidade, valor_bruto, custo_total, valor_final,
             banhoEscolhido, codigosBanho);
+
+        pegarClienteTXT(nome_cliente, contato_cliente, email_cliente, empresa_cliente);
 
         boolean verificacao = true;
 
@@ -163,16 +247,18 @@ static void pegarEstoqueTXT(
             System.out.println("1- Adicionar produto");
             System.out.println("2- Editar produto");
             System.out.println("3- Excluir produto");
+
             System.out.println("4- Ver estoque");
             System.out.println("5- Buscar produto");
             System.out.println("6- Atualizar banho");
             System.out.println("7- Registrar venda");
+
             System.out.println("8- Adicionar cliente");
             System.out.println("9- Editar cliente");
             System.out.println("10- Excluir cliente");
             System.out.println("11- Ver cliente");
             System.out.println("12- Buscar cliente");
-           
+        
             System.out.println("0- Sair");
             System.out.println("====================================");
             System.out.println("Escolha a opção desejada:");
@@ -473,15 +559,15 @@ static void pegarEstoqueTXT(
                     }
                 }
             }
-           
-           
-           
-           
-           
+        
+        
+        //==========================================================================================================================
+        
+        
             // ===============================
             // 8 — ADICIONAR CLIENTE
             // ===============================
-           
+        
             if (opcao == 8) {
                 int parcelasPagamento = 0;
                 
@@ -489,11 +575,11 @@ static void pegarEstoqueTXT(
                 String nomeCliente = estoque.nextLine();
 
                 System.out.println("Digite o contato do cliente:");
-                String  contatoCliente = estoque.nextLine();
+                String contatoCliente = estoque.nextLine();
 
                 System.out.println("Digite o email do cliente");
                 String emailCliente = estoque.nextLine();
-               
+            
                 System.out.println("Digite empresa cliente");
                 String empresaCliente = estoque.nextLine();
 
@@ -510,7 +596,7 @@ static void pegarEstoqueTXT(
 
                 for (int i = 0; i <= nome_cliente.length - 1; i++) {
                     if (nome_cliente[i] == null) {
-                       
+                    
                         nome_cliente[i] = nomeCliente;
                         contato_cliente[i] = contatoCliente;
                         parcelas_pagamento[i] = parcelasPagamento;
@@ -545,14 +631,14 @@ static void pegarEstoqueTXT(
 
                         System.out.println("Digite o email do cliente");
                         String emailCliente = estoque.nextLine();
-                       
+                    
                         System.out.println("Digite empresa cliente");
                         String empresaCliente = estoque.nextLine();
-                       
+                    
                         System.out.println("Novo pagamento:");
                         parcelas_pagamento[i] = estoque.nextInt();
-                       
-               
+                    
+            
                         System.out.println("Produto atualizado!");
                         break;
                     }
@@ -579,7 +665,7 @@ static void pegarEstoqueTXT(
                                 nome_cliente[i].equalsIgnoreCase(nomeClienteExcluir) &&
                                 empresa_cliente[i] != null &&
                                 empresa_cliente[i].equalsIgnoreCase(empresaClienteExcluir)) {
- 
+
 
                             nome_cliente[i] = null;
                             contato_cliente[i] = null;
@@ -637,17 +723,19 @@ static void pegarEstoqueTXT(
                 }
             }
 
-           
+        
             // ===============================
             // 0 — SAIR
             // ===============================
             if (opcao == 0) {
-                               
+                            
             salvarEstoqueTXT(
                 nome_produto, nome_fornecedor, cod_produto, peso,
                 quantidade, valor_bruto, custo_total, valor_final,
                 banhoEscolhido, codigosBanho );
-               
+
+            salvarClienteTXT(nome_cliente, contato_cliente, email_cliente, empresa_cliente);
+            
                 System.out.println("Sistema encerrado.");
                 verificacao = false;
                 estoque.close();
