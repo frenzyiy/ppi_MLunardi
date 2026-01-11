@@ -453,7 +453,7 @@ public class JOALHERIAMODELO {
                         valorVenda[i] = valorVendaFinal;
                         nomeCliente[i] = cliente;
                         contatoCliente[i] = contato;
-                        System.out.println("Venda registrada! Valor final: R$" + valorVendaFinal);
+                        System.out.println("Venda registrada, valor final: " + valorVendaFinal);
                         break;
                     }
                 }
